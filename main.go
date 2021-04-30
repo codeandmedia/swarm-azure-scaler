@@ -97,7 +97,7 @@ func howMuchNodes() (counter int) {
 
 func reCountServices() {
 
-	dat, err := ioutil.ReadFile("config.yaml")
+	dat, err := ioutil.ReadFile("./config.yaml")
 	if err != nil {
 		log.Println("YAML config file not found", err)
 	}
