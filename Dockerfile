@@ -6,5 +6,6 @@ WORKDIR /scaler
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main ./...
 
 FROM alpine:latest AS production
-COPY --from=builder /scaler .
-CMD ["./main"]
+COPY --from=builder /scaler /home
+VOLUME /var/run/docker.sock
+CMD ["./home/main"]
