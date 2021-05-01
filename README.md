@@ -44,13 +44,24 @@ When your cluster is going to scale down scaler recieve a message from [API](htt
 1) Azure has its own rules about hostnames and vm names. I expect your VMSS will have name like `swarm-xxx` where xxx could be a region or etc. 
 2) You should change trigger event in sources if you would like to use SpotVM. 
 3) By default config file location is `/home/config.yaml`
-
-— 
+4) Sheduled Events in Azure should be enabled for VMSS.
+5) Scaler do nothing when you manually reboot machines or some of it is down. 
 
 ## How to deploy
 
 ```
 docker service create --mode global --constraint node.role==manager --mount src=/var/run/docker.sock,dst=/var/run/docker.sock,type=bind --name scaler --config source=config.yaml,target=/home/config.yaml codeandmedia/swarm-azure-scaler:latest
 ```
+You may use my image for test purposes, but I highly recommend to customize image and sources for your cluster.
 
-You may use my image for test purposes, but I highly reccomend to customize image and sources for your cluster.
+## Step-by-step how to get MultiGeoHAAutoscale-cluster
+
+1) Create VM with white IP and VNET for the cluster, SSH to it and initialize `docker swarm init`
+2) Add swarm join string to cloud-init and create two VMSS with 1 VM each in regions like Germany West Central and Switzerland North. Scale-in policy should be Newest-VM. Do not forget to enable SheduledEvents.
+3) Setup your autoscale rules follow [the Docs](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-autoscale-overview)
+4) Create Basic Load Balancer for each ScaleSet and setup NSG, open ports related to your apps. Basic Load Balancers are free in Azure. 
+5) Promote each first VM inside ScaleSat to managers.
+6) Create config map for the scaler and deploy it.
+7) Create and config your services.
+
+You can use the VM with white IP to SSH to machines inside VMSS if you need. 
