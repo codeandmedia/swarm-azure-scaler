@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/codeandmedia/swarm-azure-scaler)](https://goreportcard.com/report/github.com/codeandmedia/swarm-azure-scaler)
+
 # Docker Swarm autoscaler for Azure
 
 Here is autoscaler and node drainer for Azure. The idea is simple: you can use autoscale rules on CPU or another metrics inside VM scaleset. Azure uses _Cloud-init_ for VM provisioning, so, you can add nodes to a Swarm cluster automatically with _Custom data and cloud init_
